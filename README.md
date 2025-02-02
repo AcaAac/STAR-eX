@@ -55,7 +55,9 @@ Across every scene, you will be able to play the piano. The thumb plays the **A 
 The **Pre-Post-Test** scene is similar to **Warm-Up Right**, but you can press **1, 2, 3, 4, or 5** to choose more challenging sequences.
 
 #### P_Condition (Passive Mirror)
-The **P_Condition** scene is inspired by **Mirror Therapy**, where the manipulator has no input, and you can press **Backspace** to continue without sending data. This condition focuses on rehabilitation and refining hand movements with no active control.
+The **P_Condition** scene is inspired by **Mirror Therapy**, where the manipulator has no input, and you can press **Backspace** to continue without sending data. This condition focuses on rehabilitation and refining hand movements with no active control. However, if you press **Enter**, the **Active Mirror (AM) Mode** will activate, where the movements of the teacher's hand will be mirrored by the student's hand. In this mode, the manipulator will move the right hand accordingly to mirror the movements of the teacher's hand, creating a real-time interaction for both rehabilitation and motor control training.
+
+This behavior is also verified in **Warm-Up Left**: You can press **Backspace** and simply play the piano sequence via the Leap Motion Controller, or press **Enter** to activate the **STAR-eX RMT Mode** and use the **AM Condition** Arduino code in conjunction with Unity's functionality to mirror the teacher's hand movements.
 
 #### K_Condition (Kinaesthetic)
 The **K_Condition** scene does **not** require the Leap Motion Controller. However, you must upload the **K Condition code** to the Arduino. In this scene, you should keep your hand as inert as possible, allowing the manipulator to move your fingers for you. This condition is inspired by **Robotic Therapy**, where the robot does everything for you, and you provide no input.
@@ -65,6 +67,7 @@ The **K_Condition** scene does **not** require the Leap Motion Controller. Howev
 - **Thumb Movement**: The thumb should be moved primarily at the **distal joint (near the nail)**.
 - **Precision**: The Leap Motion Controller's tracking is imperfect, so subtle and controlled movements are required.
 ![Correct playing](correctmotion.png)
+
 ## Research Purposes
 This project is designed to help understand if the system's RMT mode (AM stands for Active Mirror, P for Passive Mirror, and K for Kinaesthetic) aids in motor skill acquisition and control refinement, and if it can assist with motor rehabilitation. The project will collect data on hand movements during piano sequences, and the following information will be requested at the start of the **Pre-Post Test** scene:
 - Participant ID
