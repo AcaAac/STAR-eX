@@ -11,8 +11,6 @@ This repository contains the code and documentation for the STAR-eX project (Stu
 This project includes a Leap Motion Controller that tracks hand movements, a custom 3D-printed manipulator that moves the fingers, and Unity for simulation and testing purposes. The manipulator assists with both Active Mirror (AM) and Passive Mirror (P) conditions, as well as Kinesthetic (K) Therapy, offering a valuable tool for motor rehabilitation and control.
 
 ## Requirements
-To set up and run this project, you will need the following components:
-
 ### Hardware
 - **Leap Motion Controller** – A device that tracks hand motion.
 - **3D-Printed Parallel Manipulator (RIGHT Hand)** – A robotic system to assist in finger movements. (Refer to the [GitHub repository](https://github.com/BerkeleyCurtis/EECS249_HapticGlove) for instructions.)
@@ -29,7 +27,6 @@ To set up and run this project, you will need the following components:
 - **Arduino IDE** – To upload and modify the Arduino control script.
 
 ## Functionality
-
 ### System Setup
 1. Install **Ultraleap Tracking Software** and connect the Leap Motion Controller.
 2. 3D-print and assemble the **RIGHT Hand** 3D-printed parts of the **Parallel Manipulator** (refer to the [GitHub repository](https://github.com/BerkeleyCurtis/EECS249_HapticGlove) for instructions). Assemble the servo motors and solder them to the PCB, then connect the Arduino accordingly.
@@ -42,31 +39,50 @@ To set up and run this project, you will need the following components:
 ### Unity Scenes
 Across every scene, you will be able to play the piano. The thumb plays the **A key**, the index plays the **B key**, the middle finger plays the **C key**, and the pinky plays the **E key** for both the right and left hands. **NOTE:** It is impossible to play with the **ring finger** due to issues with Leap Motion tracking, so the **D key** will not be used in any sequences.
 
-#### Warm-Up Right & Left
-- **Warm-Up Right**: Allows playing the simple sequence **ABCE** using the right hand. Upon pressing enter, a terminal will show up with research-related questions. Refer to the **Research Purposes** section for more information.
-  
-  ![Warm-Up Right](warmupright.png)
-
-- **Warm-Up Left**: Allows playing the same sequence using the left hand. You can either press **Backspace** or **Enter** to proceed. Pressing **Enter** will send information through the comlink.
-
-  ![Warm-Up Left](warmupleft.png)
-
-#### Pre_Post_Test Scene
-The **Pre-Post-Test** scene is similar to **Warm-Up Right**, but you can press **1, 2, 3, 4, or 5** to choose more challenging sequences.
-
-#### P_Condition (Passive Mirror)
-The **P_Condition** scene is inspired by **Mirror Therapy**, where the manipulator has no input, and you can press **Backspace** to continue without sending data. This condition focuses on rehabilitation and refining hand movements with no active control. However, if you press **Enter**, the **Active Mirror (AM) Mode** will activate, where the movements of the teacher's hand will be mirrored by the student's hand. In this mode, the manipulator will move the right hand accordingly to mirror the movements of the teacher's hand, creating a real-time interaction for both rehabilitation and motor control training.
-
-This behavior is also verified in **Warm-Up Left**: You can press **Backspace** and simply play the piano sequence via the Leap Motion Controller, or press **Enter** to activate the **STAR-eX RMT Mode** and use the **AM Condition** Arduino code in conjunction with Unity's functionality to mirror the teacher's hand movements.
-
-#### K_Condition (Kinaesthetic)
-The **K_Condition** scene does **not** require the Leap Motion Controller. However, you must upload the **K Condition code** to the Arduino. In this scene, you should keep your hand as inert as possible, allowing the manipulator to move your fingers for you. This condition is inspired by **Robotic Therapy**, where the robot does everything for you, and you provide no input.
-
 ## How to Play Piano
 - **Finger Movement**: The fingers should flex only at the **metacarpophalangeal joints** (knuckles), keeping the rest of the fingers stiff.
 - **Thumb Movement**: The thumb should be moved primarily at the **distal joint (near the nail)**.
 - **Precision**: The Leap Motion Controller's tracking is imperfect, so subtle and controlled movements are required.
+
 ![Correct playing](correctmotion.png)
+
+## Architecture
+### Internal STAR-eX Architecture
+The STAR-eX system integrates a student-teacher architecture, using Finite State Machines (FSMs) and smooth trajectory guidance for data flow and servo actuation. Unity tracks user input, while an Arduino-based control system executes precise servo movements, ensuring responsive behavior.
+
+![System Architecture](Trajectory Architecture_2.png)
+
+An event `e_i`, such as a key press or release, triggers computations and state transitions in Unity and Arduino FSMs, leading to smooth servo movements.
+
+#### Unity Finite State Machine (FSM)
+The Unity FSM acts as the teacher, processing VR piano task events and transmitting desired angles (`θ_d_i`) to the Arduino FSM. It monitors MCP joint angles to detect key press events. Each finger is tracked separately to minimize sensor noise. When a finger’s MCP angle (`α_FINGER`) exceeds its corresponding press threshold (`t_1F`), Unity signals a key press and updates `θ_d_i`.
+
+Unity outputs the key state (`up` or `down`) and desired angle (`θ_d_i`) for the Arduino FSM to calculate smooth servo trajectories.
+![System Architecture](Unity FSM.png)
+#### Arduino Finite State Machine (FSM)
+The Arduino FSM, acting as the student, executes commands received from Unity. It operates with separate FSMs for each finger to ensure reliable performance. Each finger's FSM follows these states:
+
+- **Idle**: No movement detected.
+- **Down**: Activated on receiving key press signal.
+- **Pressed**: Holds the servo at the desired angle.
+- **Up**: Initiates release when the key press signal clears.
+
+This sequence ensures smooth, jitter-free servo movements, avoiding interference and parasitic torque effects.
+![System Architecture](Arduino_FSM(1).png)
+#### Smooth Trajectory Guidance
+The Arduino FSM employs smooth trajectory guidance to ensure natural servo movements. Using the following equations, intermediate angles are computed between consecutive states, applying a smoothing factor (`α`) to transition angles incrementally:
+
+```
+θ_t = θ_d_{i-1} + α Δθ_d_i, where α = 0.1
+Δθ_d_i = θ_d_i - θ_d_{i-1}
+```
+
+**Trajectory Computation Steps:**
+1. Calculate the angle difference (`Δθ_d_i`) between current and desired states.
+2. Apply the smoothing factor (`α`) to determine the incremental step.
+3. Update the servo angle (`θ_t`) until the desired angle (`θ_d_i`) is reached.
+
+This approach ensures responsive and precise finger movements, aligning with the VR piano task.
 
 ## Research Purposes
 This project is designed to help understand if the system's RMT mode (AM stands for Active Mirror, P for Passive Mirror, and K for Kinaesthetic) aids in motor skill acquisition and control refinement, and if it can assist with motor rehabilitation. The project will collect data on hand movements during piano sequences, and the following information will be requested at the start of the **Pre-Post Test** scene:
