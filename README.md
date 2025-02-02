@@ -6,7 +6,7 @@ This repository contains the code and documentation for the STAR-eX project (Stu
 [Ultraleap Tracking Software](https://www.ultraleap.com) – Provides hand-tracking capabilities.
 
 ### System Overview
-![System Overview](systemoverview.png)
+![System Overview](Setup.png)
 
 This project includes a Leap Motion Controller that tracks hand movements, a custom 3D-printed manipulator that moves the fingers, and Unity for simulation and testing purposes. The manipulator assists with both Active Mirror (AM) and Passive Mirror (P) conditions, as well as Kinesthetic (K) Therapy, offering a valuable tool for motor rehabilitation and control.
 
@@ -64,7 +64,7 @@ The **K_Condition** scene does **not** require the Leap Motion Controller. Howev
 - **Finger Movement**: The fingers should flex only at the **metacarpophalangeal joints** (knuckles), keeping the rest of the fingers stiff.
 - **Thumb Movement**: The thumb should be moved primarily at the **distal joint (near the nail)**.
 - **Precision**: The Leap Motion Controller's tracking is imperfect, so subtle and controlled movements are required.
-![Correct playing](correct.png)
+![Correct playing](correctmotion.png)
 ## Research Purposes
 This project is designed to help understand if the system's RMT mode (AM stands for Active Mirror, P for Passive Mirror, and K for Kinaesthetic) aids in motor skill acquisition and control refinement, and if it can assist with motor rehabilitation. The project will collect data on hand movements during piano sequences, and the following information will be requested at the start of the **Pre-Post Test** scene:
 - Participant ID
