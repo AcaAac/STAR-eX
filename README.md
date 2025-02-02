@@ -1,4 +1,4 @@
-# STAR-eX: Student Teacher Assistive Rehabilitation Exoskeleton - README
+# STAR-eX: Student Teacher Assistive Rehabilitation Exoskeleton
 
 ## Introduction
 This repository contains the code and documentation for the STAR-eX project (Student Teacher Assistive Rehabilitation Exoskeleton), inspired by Robotic Mirror Therapy (RMT), offering a cheap and portable alternative to other RMT devices on the market. The system combines a Leap Motion Controller, an Arduino-controlled 3D-printed parallel manipulator, and Unity to simulate and analyze hand movements while playing piano sequences. The primary goal of this project is to explore motor control and rehabilitation applications.
