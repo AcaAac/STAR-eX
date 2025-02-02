@@ -50,7 +50,7 @@ Across every scene, you will be able to play the piano. The thumb plays the **A 
 ### Internal STAR-eX Architecture
 The STAR-eX system integrates a student-teacher architecture, using Finite State Machines (FSMs) and smooth trajectory guidance for data flow and servo actuation. Unity tracks user input, while an Arduino-based control system executes precise servo movements, ensuring responsive behavior.
 
-![System Architecture](Trajectory Architecture_2.png)
+![System Architecture](Trajectory_Architecture_2.png)
 
 An event `e_i`, such as a key press or release, triggers computations and state transitions in Unity and Arduino FSMs, leading to smooth servo movements.
 
@@ -58,7 +58,9 @@ An event `e_i`, such as a key press or release, triggers computations and state 
 The Unity FSM acts as the teacher, processing VR piano task events and transmitting desired angles (`θ_d_i`) to the Arduino FSM. It monitors MCP joint angles to detect key press events. Each finger is tracked separately to minimize sensor noise. When a finger’s MCP angle (`α_FINGER`) exceeds its corresponding press threshold (`t_1F`), Unity signals a key press and updates `θ_d_i`.
 
 Unity outputs the key state (`up` or `down`) and desired angle (`θ_d_i`) for the Arduino FSM to calculate smooth servo trajectories.
-![System Architecture](Unity FSM.png)
+
+<img src="UnityFSM.png" alt="Unity FSM" width="70%">
+
 #### Arduino Finite State Machine (FSM)
 The Arduino FSM, acting as the student, executes commands received from Unity. It operates with separate FSMs for each finger to ensure reliable performance. Each finger's FSM follows these states:
 
@@ -68,7 +70,9 @@ The Arduino FSM, acting as the student, executes commands received from Unity. I
 - **Up**: Initiates release when the key press signal clears.
 
 This sequence ensures smooth, jitter-free servo movements, avoiding interference and parasitic torque effects.
-![System Architecture](Arduino_FSM(1).png)
+
+<img src="Arduino_FSM(1).png" alt="Arduino FSM" width="70%">
+
 #### Smooth Trajectory Guidance
 The Arduino FSM employs smooth trajectory guidance to ensure natural servo movements. Using the following equations, intermediate angles are computed between consecutive states, applying a smoothing factor (`α`) to transition angles incrementally:
 
