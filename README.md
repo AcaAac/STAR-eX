@@ -36,7 +36,7 @@ This project includes a Leap Motion Controller that tracks hand movements, a cus
 ![Correct playing](rmt_mode.gif)
    - For the **Kinaesthetic (K) Condition**, upload the K Condition code to the Arduino.
 
-![Correct playing](rt_mode.gif)
+<img src="rt_mode.gif" style="transform: rotate(90deg);">
 5. Open Unity and ensure the serial connection to the Arduino is properly set up inside `HandDataExtractor_P` or `HandDataExtractor_K` in the "FlexionEditor" object of the scenes.
 6. Run the Unity project.
 
