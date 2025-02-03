@@ -32,9 +32,11 @@ This project includes a Leap Motion Controller that tracks hand movements, a cus
 2. 3D-print and assemble the **RIGHT Hand** 3D-printed parts of the **Parallel Manipulator** (refer to the [GitHub repository](https://github.com/BerkeleyCurtis/EECS249_HapticGlove) for instructions). Assemble the servo motors and solder them to the PCB, then connect the Arduino accordingly.
 3. Upload the appropriate **Arduino code**:
    - For the **Active Mirror (AM) Condition**, upload the AM code to the Arduino for **WarmUpLeft** or **P_Condition** scenes. Press "Enter" after playing the scene in Unity. *(Make sure the correct serial port is specified in `HandDataExtractor_P` on line 725)*
+![Correct playing](rmt_mode.gif)
    - For the **Kinaesthetic (K) Condition**, upload the K Condition code to the Arduino.
-4. Open Unity and ensure the serial connection to the Arduino is properly set up inside `HandDataExtractor_P` or `HandDataExtractor_K` in the "FlexionEditor" object of the scenes.
-5. Run the Unity project.
+![Correct playing](rt_mode.gif)
+5. Open Unity and ensure the serial connection to the Arduino is properly set up inside `HandDataExtractor_P` or `HandDataExtractor_K` in the "FlexionEditor" object of the scenes.
+6. Run the Unity project.
 
 ### Unity Scenes
 Across every scene, you will be able to play the piano. The thumb plays the **A key**, the index plays the **B key**, the middle finger plays the **C key**, and the pinky plays the **E key** for both the right and left hands. **NOTE:** It is impossible to play with the **ring finger** due to issues with Leap Motion tracking, so the **D key** will not be used in any sequences.
@@ -45,6 +47,7 @@ Across every scene, you will be able to play the piano. The thumb plays the **A 
 - **Precision**: The Leap Motion Controller's tracking is imperfect, so subtle and controlled movements are required.
 
 ![Correct playing](correctmotion.png)
+![Correct playing](piano_playing.gif)
 
 ## Architecture
 ### Internal STAR-eX Architecture
@@ -52,12 +55,12 @@ The STAR-eX system integrates a student-teacher architecture, using Finite State
 
 ![System Architecture](Trajectory_Architecture_2.png)
 
-An event `e_i`, such as a key press or release, triggers computations and state transitions in Unity and Arduino FSMs, leading to smooth servo movements.
+An event $$e_i$$, such as a key press or release, triggers computations and state transitions in Unity and Arduino FSMs, leading to smooth servo movements.
 
 #### Unity Finite State Machine (FSM)
-The Unity FSM acts as the teacher, processing VR piano task events and transmitting desired angles (`θ_d_i`) to the Arduino FSM. It monitors MCP joint angles to detect key press events. Each finger is tracked separately to minimize sensor noise. When a finger’s MCP angle (`α_FINGER`) exceeds its corresponding press threshold (`t_1F`), Unity signals a key press and updates `θ_d_i`.
+The Unity FSM acts as the teacher, processing VR piano task events and transmitting desired angles ($$\theta_{d_{i}}$$) to the Arduino FSM. It monitors MCP joint angles to detect key press events. Each finger is tracked separately to minimize sensor noise. When a finger’s MCP angle ($$\alpha_F$$) exceeds its corresponding press threshold ($$t_{1F}$$), Unity signals a key press and updates $$\theta_{d_{i}}$$.
 
-Unity outputs the key state (`up` or `down`) and desired angle (`θ_d_i`) for the Arduino FSM to calculate smooth servo trajectories.
+Unity outputs the key state (`up` or `down`) and desired angle ($$\theta_{d_{i}}$$) for the Arduino FSM to calculate smooth servo trajectories.
 
 <img src="UnityFSM.png" alt="Unity FSM" width="70%">
 
@@ -75,11 +78,8 @@ This sequence ensures smooth, jitter-free servo movements, avoiding interference
 
 #### Smooth Trajectory Guidance
 The Arduino FSM employs smooth trajectory guidance to ensure natural servo movements. Using the following equations, intermediate angles are computed between consecutive states, applying a smoothing factor (`α`) to transition angles incrementally:
-
-```
-θ_t = θ_d_{i-1} + α Δθ_d_i, where α = 0.1
-Δθ_d_i = θ_d_i - θ_d_{i-1}
-```
+$$\theta_t = \theta_{d_{i-1}} + \alpha \Delta\theta_{d_{i}}, where \alpha = 0.1, $$
+$$\Delta\theta_{d_{i}} = \theta_{d_{i}} - \theta_{d_{i-1}}$$
 
 **Trajectory Computation Steps:**
 1. Calculate the angle difference (`Δθ_d_i`) between current and desired states.
