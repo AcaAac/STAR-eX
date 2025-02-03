@@ -32,8 +32,10 @@ This project includes a Leap Motion Controller that tracks hand movements, a cus
 2. 3D-print and assemble the **RIGHT Hand** 3D-printed parts of the **Parallel Manipulator** (refer to the [GitHub repository](https://github.com/BerkeleyCurtis/EECS249_HapticGlove) for instructions). Assemble the servo motors and solder them to the PCB, then connect the Arduino accordingly.
 3. Upload the appropriate **Arduino code**:
    - For the **Active Mirror (AM) Condition**, upload the AM code to the Arduino for **WarmUpLeft** or **P_Condition** scenes. Press "Enter" after playing the scene in Unity. *(Make sure the correct serial port is specified in `HandDataExtractor_P` on line 725)*
+
 ![Correct playing](rmt_mode.gif)
    - For the **Kinaesthetic (K) Condition**, upload the K Condition code to the Arduino.
+
 ![Correct playing](rt_mode.gif)
 5. Open Unity and ensure the serial connection to the Arduino is properly set up inside `HandDataExtractor_P` or `HandDataExtractor_K` in the "FlexionEditor" object of the scenes.
 6. Run the Unity project.
@@ -47,6 +49,7 @@ Across every scene, you will be able to play the piano. The thumb plays the **A 
 - **Precision**: The Leap Motion Controller's tracking is imperfect, so subtle and controlled movements are required.
 
 ![Correct playing](correctmotion.png)
+
 ![Correct playing](piano_playing.gif)
 
 ## Architecture
